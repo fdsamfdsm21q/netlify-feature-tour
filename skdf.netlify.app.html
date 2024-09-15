@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성현이가 명은이를 위한 페이지</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 10px;
+            background-color: #fdf6e3;
+            color: #5e5e5e;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6f61;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px #fce4ec;
+        }
+
+        .section {
+            background-color: #fff;
+            border: 2px solid #ffcccb;
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            font-size: 0.9em;
+        }
+
+        label {
+            color: #5e5e5e;
+            font-size: 0.9em;
+        }
+
+        button {
+            display: block;
+            margin: 8px auto;
+            padding: 6px 12px;
+            background-color: #ffcccb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #ff8a80;
+        }
+
+        textarea, input[type="number"], select {
+            width: 100%;
+            border: 1px solid #ffcccb;
+            border-radius: 5px;
+            padding: 6px;
+            font-size: 0.9em;
+        }
+
+        .cat-image {
+            display: block;
+            margin: 5px auto;
+            width: 60px;
+            height: auto;
+        }
+
+        .cat-background {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 40px;
+        }
+        .cat-background-left {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>성현이가 명은이를 위한 페이지</h1>
+    <img src="https://placekitten.com/80/80" alt="Cute Cat" class="cat-image">
+    <img src="https://placekitten.com/40/40" alt="Cute Cat" class="cat-background">
+    <img src="https://placekitten.com/50/50" alt="Cute Cat" class="cat-background-left">
+
+    <!-- 건강 상태 -->
+    <div class="section">
+        <h2>건강 상태</h2>
+        <textarea id="healthStatus" rows="2" placeholder="오늘 건강 상태를 적어보세요..."></textarea>
+    </div>
+
+    <!-- 식사 기록 -->
+    <div class="section">
+        <h2>식사 기록</h2>
+        <label><input type="checkbox" id="breakfast"> 아침</label>
+        <label><input type="checkbox" id="lunch"> 점심</label>
+        <label><input type="checkbox" id="dinner"> 저녁</label>
+    </div>
+
+    <!-- 기분 기록 -->
+    <div class="section">
+        <h2>기분 기록</h2>
+        <select id="mood">
+            <option value="happy">기분 좋음</option>
+            <option value="neutral">보통</option>
+            <option value="sad">우울함</option>
+        </select>
+        <textarea id="moodReason" rows="2" placeholder="기분이 왜 그랬는지 적어보세요..."></textarea>
+    </div>
+
+    <!-- 일기 작성 -->
+    <div class="section">
+        <h2>일기</h2>
+        <textarea id="diary" rows="3" placeholder="오늘의 일기를 적어보세요..."></textarea>
+    </div>
+
+    <!-- 예상 지출 -->
+    <div class="section">
+        <h2>오늘 예상 지출</h2>
+        <input type="number" id="expense" placeholder="예상 지출 금액 입력">
+    </div>
+
+    <!-- 주간 인형뽑기 횟수 -->
+    <div class="section">
+        <h2>주간 인형뽑기 횟수 (최대 2개 선택)</h2>
+        <label>월 <input type="checkbox" class="clawMachineCheckbox"></label>
+        <label>화 <input type="checkbox" class="clawMachineCheckbox"></label>
+        <label>수 <input type="checkbox" class="clawMachineCheckbox"></label>
+        <label>목 <input type="checkbox" class="clawMachineCheckbox"></label>
+        <label>금 <input type="checkbox" class="clawMachineCheckbox"></label>
+        <label>토 <input type="checkbox" class="clawMachineCheckbox"></label>
+        <label>일 <input type="checkbox" class="clawMachineCheckbox"></label>
+    </div>
+
+    <!-- 저장 및 이미지 다운로드 버튼 -->
+    <button onclick="saveData()">저장</button>
+    <button onclick="downloadImage()">이미지 다운로드</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0-rc.5/html2canvas.min.js"></script>
+    <script>
+        // 인형뽑기 체크박스 제한
+        document.querySelectorAll('.clawMachineCheckbox').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const checkedCheckboxes = document.querySelectorAll('.clawMachineCheckbox:checked');
+                if (checkedCheckboxes.length > 2) {
+                    checkbox.checked = false;
+                    alert('최대 2개까지만 선택할 수 있습니다.');
+                }
+            });
+        });
+
+        // 데이터 저장 함수
+        function saveData() {
+            const healthStatus = document.getElementById('healthStatus').value;
+            const breakfast = document.getElementById('breakfast').checked;
+            const lunch = document.getElementById('lunch').checked;
+            const dinner = document.getElementById('dinner').checked;
+            const mood = document.getElementById('mood').value;
+            const moodReason = document.getElementById('moodReason').value;
+            const diary = document.getElementById('diary').value;
+            const expense = document.getElementById('expense').value;
+            const clawMachineDays = Array.from(document.querySelectorAll('.clawMachineCheckbox'))
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.parentElement.textContent.trim());
+
+            const data = {
+                healthStatus,
+                breakfast,
+                lunch,
+                dinner,
+                mood,
+                moodReason,
+                diary,
+                expense,
+                clawMachineDays
+            };
+
+            // 로컬 스토리지에 데이터 저장
+            localStorage.setItem('dailyData', JSON.stringify(data));
+            alert('데이터가 저장되었습니다.');
+        }
+
+        // 이미지 다운로드 기능
+        function downloadImage() {
+            html2canvas(document.body).then(canvas => {
+                canvas.toBlob(function(blob) {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'daily_journal.jpg';
+                    link.click();
+                }, 'image/jpeg');
+            });
+        }
+    </script>
+</body>
+</html>
